@@ -5,59 +5,285 @@
   padding: 0;
 }
 
+/* Brand palette and tokens (L'Oréal-inspired) */
+:root {
+  --brand-black: #0b0b0b; /* primary brand color */
+  --brand-deep-gray: #222222;
+  --brand-soft-gray: #666666;
+  --brand-accent-gold: #c49a45; /* elegant gold accent */
+  --bg-warm: #fbf8f6; /* warm neutral background */
+  --surface: #ffffff;
+  --muted: #8a8580;
+  --focus-ring: rgba(196, 154, 69, 0.25);
+  --max-width: 900px;
+}
 /* —— body + fonts —— */
 body {
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
-  color: #333;
+  color: var(--brand-deep-gray);
   display: flex;
   justify-content: center;
+  background: var(--bg-warm);
+}
+
+/* Dark, immersive theme (L'Oréal-inspired) */
+body {
+  font-family: "Montserrat", Arial, Helvetica, sans-serif;
+  color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  background-color: #000; /* deep black canvas */
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page-wrapper {
+  width: 94%;
+  max-width: var(--max-width);
+  margin: 20px 0 40px;
+  position: relative;
+  z-index: 2; /* sit above decorative background */
+}
+
+/* Decorative concentric gold rings using repeating-radial-gradient */
+body::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(
+      circle at 50% 50%,
+      rgba(196, 154, 69, 0.06) 0 1px,
+      transparent 1px
+    ),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      transparent 0 180px,
+      rgba(196, 154, 69, 0.12) 184px,
+      transparent 186px,
+      transparent 360px
+    );
+  mix-blend-mode: screen;
 }
 
 .page-wrapper {
   width: 90%;
-  max-width: 900px;
+  max-width: var(--max-width);
+  margin: 24px 0 40px;
 }
 
 /* header */
 .site-header {
-  text-align: center;
-  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px; /* increased space between logo and title — tweak as needed */
+  padding: 28px 0 8px;
 }
 
 .site-title {
   font-size: 22px;
-  font-weight: 500;
-  margin-bottom: 10px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.4px;
+  margin: 0; /* reset any invalid/previous margin */
+  margin-left: 12px; /* <-- adjust this value to change left spacing */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.brand-logo {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 220ms ease, filter 220ms ease;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+}
+
+.brand-logo:hover {
+  transform: scale(1.04) rotate(-1deg);
+  filter: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.65));
+}
+
+/* Logo badge + fallback to ensure visibility on dark backgrounds */
+.logo-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: radial-gradient(
+    120px 60px at 50% 50%,
+    rgba(196, 154, 69, 0.08),
+    rgba(0, 0, 0, 0.18)
+  );
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(255, 255, 255, 0.02) inset;
+}
+
+.logo-badge::after {
+  /* subtle gold ring around badge */
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 18px;
+  background: radial-gradient(
+    circle at center,
+    transparent 58%,
+    rgba(196, 154, 69, 0.06) 59%,
+    transparent 60%
+  );
+  pointer-events: none;
+  filter: blur(0.6px);
+}
+
+.logo-fallback {
+  position: absolute;
+  z-index: 3;
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 18px;
+  color: #ffffff;
+  text-transform: uppercase;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.98;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  display: none; /* hide typographic fallback by default when using a white logo */
+}
+
+.logo-fallback.show {
+  display: block;
+}
+
+.logo-badge img.brand-logo {
+  position: relative;
+  z-index: 2;
+  /* slightly reduced opacity to let the typographic fallback read through if needed */
+  opacity: 0.92;
+}
+
+.site-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff; /* ensure title is white on dark theme */
+  letter-spacing: 0.4px;
+  margin: 0; /* reset any invalid/previous margin */
+  margin-left: 52px; /* <-- adjust this value to change left spacing */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.brand-logo {
+  height: 88px; /* larger logo for stronger presence */
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 520px) {
+  .site-header {
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 24px;
+  }
+
+  .brand-logo {
+    height: 56px;
+  }
 }
 
 /* chat window */
 .chatbox {
-  margin: 40px 0;
+  margin: 28px 0;
+}
+
+.chatbox {
+  margin: 28px 0;
+}
+
+.chat-window {
+  height: 420px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 22px;
+  font-size: 18px;
+  line-height: 1.5;
+  overflow-y: auto;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+  color: #f3f3f3;
+  white-space: pre-line;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.chat-window::-webkit-scrollbar {
+  width: 10px;
+}
+.chat-window::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(196, 154, 69, 0.18),
+    rgba(196, 154, 69, 0.08)
+  );
+  border-radius: 10px;
 }
 
 .chat-window {
   height: 360px;
-  border: 1px solid #000;
+  border: 1px solid rgba(11, 11, 11, 0.08);
   padding: 20px;
   font-size: 18px;
   line-height: 1.5;
   overflow-y: auto;
-  background: #fafafa;
+  background: var(--surface);
   white-space: pre-line;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(34, 34, 34, 0.06);
 }
 
 /* messages */
 .msg {
   margin-bottom: 14px;
-  line-height: 1.5;
+  line-height: 1.45;
+}
+
+.msg {
+  margin-bottom: 14px;
+  line-height: 1.45;
 }
 
 .msg.user {
-  color: #000;
+  color: #fff;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.015)
+  );
+  padding: 8px 12px;
+  border-radius: 8px;
 }
 
 .msg.ai {
-  color: #666666;
+  color: rgba(255, 255, 255, 0.82);
+  opacity: 0.95;
+}
+
+.msg.user {
+  color: var(--brand-black);
+}
+
+.msg.ai {
+  color: var(--brand-soft-gray);
 }
 
 /* input row */
@@ -67,22 +293,87 @@ body {
   margin-top: 16px;
 }
 
+.chat-form {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  align-items: center;
+}
+
 .chat-form input {
   flex: 1;
-  padding: 12px;
-  border: 1px solid #ccc;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 18px;
+  border-radius: 999px; /* pill input */
+  background: rgba(255, 255, 255, 0.02);
+  color: #fff;
+}
+
+.chat-form input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .chat-form input:focus {
-  outline: 2px solid #000;
-  outline-offset: 2px;
+  box-shadow: 0 6px 22px rgba(196, 154, 69, 0.08);
+  outline: none;
+  border-color: rgba(196, 154, 69, 0.6);
 }
 
 .chat-form button {
   font-size: 18px;
-  background: #000;
-  color: #fff;
+  background: linear-gradient(180deg, var(--brand-accent-gold), #b58734);
+  color: var(--brand-black);
+  border: none;
+  padding: 12px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  border-radius: 50%;
+  box-shadow: 0 10px 22px rgba(196, 154, 69, 0.14);
+}
+
+.chat-form button .material-icons {
+  font-size: 22px;
+}
+
+.chat-form button:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 42px rgba(196, 154, 69, 0.18);
+}
+
+.chat-form button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.chat-form button:focus {
+  box-shadow: 0 0 0 8px rgba(196, 154, 69, 0.12);
+  outline: none;
+}
+
+.chat-form input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid rgba(11, 11, 11, 0.12);
+  font-size: 18px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fff, #fbfbfb);
+}
+
+.chat-form input:focus {
+  box-shadow: 0 0 0 6px var(--focus-ring);
+  outline: none;
+  border-color: var(--brand-accent-gold);
+}
+
+.chat-form button {
+  font-size: 18px;
+  background: var(--brand-black);
+  color: var(--surface);
   border: none;
   padding: 12px;
   width: 48px;
@@ -91,20 +382,23 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.18s, transform 0.08s;
+  border-radius: 8px;
 }
 
 .chat-form button .material-icons {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .chat-form button:hover {
-  background: #666666;
+  background: var(--brand-accent-gold);
+  color: var(--brand-black);
+  transform: translateY(-1px);
 }
 
 .chat-form button:focus {
-  outline: 2px solid #000;
-  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--focus-ring);
+  outline: none;
 }
 
 /* visually hidden */
@@ -122,10 +416,17 @@ body {
 
 /* footer */
 .site-footer {
-  margin: 60px 0 40px;
+  margin: 48px 0 20px;
   text-align: center;
   font-size: 14px;
-  color: #666;
+  color: var(--muted);
+}
+
+.site-footer {
+  margin: 40px 0 24px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .site-footer nav {
@@ -134,10 +435,56 @@ body {
 
 .site-footer a {
   margin: 0 8px;
-  color: #000;
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
 }
 
 .site-footer a:hover {
-  color: #666666;
+  color: var(--brand-accent-gold);
+}
+
+/* Utility: ensure focus-visible for keyboard users */
+*:focus {
+  outline: none;
+}
+
+:focus-visible {
+  box-shadow: 0 0 0 8px rgba(196, 154, 69, 0.12);
+  border-radius: 8px;
+}
+
+/* Small responsive tweaks */
+@media (max-width: 640px) {
+  .chat-window {
+    height: 340px;
+    padding: 16px;
+  }
+
+  .brand-logo {
+    height: 64px;
+  }
+}
+
+.site-footer nav {
+  margin-top: 12px;
+}
+
+.site-footer a {
+  margin: 0 8px;
+  color: var(--brand-deep-gray);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: var(--brand-accent-gold);
+}
+
+/* Utility: ensure focus-visible for keyboard users */
+*:focus {
+  outline: none;
+}
+
+:focus-visible {
+  box-shadow: 0 0 0 6px var(--focus-ring);
+  border-radius: 6px;
 }

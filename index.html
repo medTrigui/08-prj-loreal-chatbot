@@ -19,7 +19,19 @@
     <div class="page-wrapper">
       <!------- Header / Branding ------->
       <header class="site-header">
-        <h1 class="site-title">Smart Product Advisor</h1>
+        <!-- logo wrapped so we can add a halo and a typographic fallback for dark theme -->
+        <div class="brand">
+          <div class="logo-badge">
+            <img
+              src="img/loreal-logo-white.png"
+              alt="L'Oréal logo"
+              class="brand-logo"
+            />
+            <!-- typographic fallback: sits over the graphic to ensure the wordmark is always readable -->
+            <span class="logo-fallback">L'ORÉAL</span>
+          </div>
+          <h1 class="site-title">Smart Product Advisor</h1>
+        </div>
       </header>
 
       <!------- Chat Area ------->
