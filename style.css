@@ -286,6 +286,77 @@ body::before {
   color: var(--brand-soft-gray);
 }
 
+/* Ensure chat messages in the visible chat window use a readable black color.
+   This covers existing `.msg` selectors and the JS-rendered `.chat-message` class. */
+.chat-window,
+.chat-window .chat-message,
+.chat-window .msg {
+  color: var(--brand-black);
+}
+
+/* Labels and message text styling for clarity */
+.chat-window .msg-label {
+  font-weight: 700;
+  margin-right: 8px;
+  color: var(--brand-black);
+}
+
+.chat-window .msg-text {
+  color: var(--brand-black);
+}
+
+/* Ensure the input text (what you type) is also clearly black */
+.chat-form input {
+  color: var(--brand-black) !important;
+}
+
+/* Improve layout: make messages look like chat bubbles and align properly */
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: "Montserrat", Arial, Helvetica, sans-serif;
+}
+
+.msg {
+  max-width: 78%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  display: inline-block;
+  word-break: break-word;
+}
+
+/* User messages aligned to the right */
+.msg.user {
+  background: #ffffff;
+  color: var(--brand-black) !important;
+  margin-left: auto;
+  box-shadow: 0 6px 18px rgba(34, 34, 34, 0.04);
+}
+
+/* Assistant messages aligned to the left */
+.msg.ai {
+  background: #f7f7f7;
+  color: var(--brand-black) !important;
+  margin-right: auto;
+  box-shadow: 0 6px 18px rgba(34, 34, 34, 0.04);
+}
+
+/* Make labels slightly smaller and bold so they match brand typography */
+.chat-window .msg-label {
+  font-weight: 700;
+  font-size: 0.95em;
+  margin-right: 8px;
+  color: var(--brand-black) !important;
+}
+
+/* Make message text consistent with L'Oréal typography */
+.chat-window .msg-text {
+  font-family: "Montserrat", Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  color: var(--brand-black) !important;
+}
+
 /* input row */
 .chat-form {
   display: flex;
