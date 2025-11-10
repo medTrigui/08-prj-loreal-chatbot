@@ -22,7 +22,7 @@ let messages = [
   {
     role: "system",
     content:
-      "You are a helpful assistant specialized in L’Oréal products, skincare and beauty routines, and related recommendations. Politely refuse to answer questions that are unrelated to L’Oréal products, beauty, skincare, cosmetics, haircare, or routine recommendations. When refusing, respond briefly and offer to help with L’Oréal-specific or beauty-related questions instead."
+      "You are a helpful assistant specialized in L’Oréal products, skincare and beauty routines, and related recommendations. Politely refuse to answer questions that are unrelated to L’Oréal products, beauty, skincare, cosmetics, haircare, or routine recommendations. When refusing, respond briefly and offer to help with L’Oréal-specific or beauty-related questions instead.",
   },
 ];
 
@@ -61,13 +61,9 @@ function addMessage(role, text) {
 
 // Send request to OpenAI Chat Completions API using fetch and async/await
 async function getChatCompletion(convMessages) {
-  if (!apiKey) {
-    throw new Error(
-      "OpenAI API key not found. Put it in secrets.js as a global variable."
-    );
-  }
-
-  const url = "https://api.openai.com/v1/chat/completions";
+  // We route requests through a Cloudflare Worker so the OpenAI API key stays server-side.
+  // The worker URL (provided by user) will forward the request to OpenAI and return the response.
+  const WORKER_URL = "https://loreal-worker.mtrigui.workers.dev/";
 
   const body = {
     model: "gpt-4o", // use gpt-4o by default as requested
@@ -75,11 +71,10 @@ async function getChatCompletion(convMessages) {
     // you can add other options like max_tokens, temperature if desired
   };
 
-  const resp = await fetch(url, {
+  const resp = await fetch(WORKER_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify(body),
   });
