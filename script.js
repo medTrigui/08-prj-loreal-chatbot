@@ -1,13 +1,11 @@
 /*
   script.js
-  - Captures user input from a simple chat UI
-  - Sends messages to OpenAI Chat Completions API using `messages`
-  - Displays responses in the chat area
+  - Lightweight chat client for the L'Oréal demo.
+    - Captures user input and renders messages as chat bubbles.
+    - Routes requests through a Cloudflare Worker (so the API key stays server-side).
+    - Keeps a simple messages array and displays assistant responses.
 
-  Note for students:
-  - Put your API key in secrets.js as a global variable, for example:
-      const OPENAI_API_KEY = "sk-xxxx";
-    and include <script src="secrets.js"></script> before this script in index.html.
+  Final-touch comments and small polish added below for clarity.
 */
 
 // Get references to DOM elements (match IDs used in `index.html`)
@@ -31,6 +29,7 @@ const apiKey =
   window.OPENAI_API_KEY || window.API_KEY || window.OPENAI_KEY || "";
 
 // Helper to append messages to the chat container
+// role: 'user' or 'assistant' (we also accept 'ai' as the assistant class)
 function addMessage(role, text) {
   // role expected to be 'user' or 'assistant'
   const msgEl = document.createElement("div");
@@ -56,26 +55,29 @@ function addMessage(role, text) {
 
   if (!chatContainer) return; // defensive
   chatContainer.appendChild(msgEl);
+  // Smoothly scroll newest message into view
   chatContainer.scrollTop = chatContainer.scrollHeight;
+  // add a transient 'new' class for a subtle appear animation, then remove it
+  msgEl.classList.add('new');
+  setTimeout(() => msgEl.classList.remove('new'), 260);
 }
 
 // Send request to OpenAI Chat Completions API using fetch and async/await
+// NOTE: This client posts to a Cloudflare Worker URL which must forward
+// the request to OpenAI using the server-side key.
 async function getChatCompletion(convMessages) {
-  // We route requests through a Cloudflare Worker so the OpenAI API key stays server-side.
-  // The worker URL (provided by user) will forward the request to OpenAI and return the response.
   const WORKER_URL = "https://loreal-worker.mtrigui.workers.dev/";
+  // Log the worker endpoint (helpful during local dev)
+  console.info("POSTing chat completion request to worker:", WORKER_URL);
 
   const body = {
-    model: "gpt-4o", // use gpt-4o by default as requested
-    messages: convMessages, // provide the full conversation
-    // you can add other options like max_tokens, temperature if desired
+    model: "gpt-4o",
+    messages: convMessages,
   };
 
   const resp = await fetch(WORKER_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
@@ -96,18 +98,21 @@ async function getChatCompletion(convMessages) {
 }
 
 // Handle form submit / send button
+// - Prevents default submit behavior
+// - Renders user's message immediately and shows a typing indicator
+// - Sends messages array to the worker and renders assistant reply
 async function handleSend(event) {
   if (event) event.preventDefault();
   const text = userInput?.value.trim();
   if (!text) return;
 
-  // Show user's message in UI and add to messages
+  // Show user's message in UI and add to messages (messages array is used for context)
   addMessage("user", text);
   messages.push({ role: "user", content: text });
   userInput.value = "";
   sendBtn.disabled = true;
 
-  // Optionally show a "typing..." indicator
+  // Optionally show a "typing..." indicator to improve UX
   const typingEl = document.createElement("div");
   typingEl.classList.add("chat-message", "msg", "ai", "typing");
   const typingLabel = document.createElement("span");
@@ -124,12 +129,10 @@ async function handleSend(event) {
   try {
     const reply = await getChatCompletion(messages);
 
-    // Remove typing indicator
-    typingEl.remove();
-
-    // Add assistant reply to UI and conversation
-    addMessage("assistant", reply);
-    messages.push({ role: "assistant", content: reply });
+  // Remove typing indicator and render assistant reply
+  typingEl.remove();
+  addMessage("assistant", reply);
+  messages.push({ role: "assistant", content: reply });
   } catch (err) {
     // Remove typing indicator and show error
     typingEl.remove();

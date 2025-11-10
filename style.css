@@ -422,7 +422,7 @@ body::before {
   line-height: 1.4;
   background: #ffffff;
   color: var(--brand-black) !important;
-  box-shadow: 0 6px 18px rgba(34,34,34,0.04);
+  box-shadow: 0 6px 18px rgba(34, 34, 34, 0.04);
 }
 
 /* User messages: right aligned */
@@ -454,7 +454,7 @@ body::before {
   font-weight: 600;
   font-size: 0.85rem;
   margin-bottom: 6px;
-  color: rgba(0,0,0,0.65) !important;
+  color: rgba(0, 0, 0, 0.65) !important;
 }
 
 .chat-window .msg-text {
@@ -465,13 +465,29 @@ body::before {
 /* Input field should be black text on white */
 .chat-form input {
   color: var(--brand-black) !important;
-  background: linear-gradient(180deg,#fff,#fbfbfb) !important;
+  background: linear-gradient(180deg, #fff, #fbfbfb) !important;
 }
-.chat-form input::placeholder { color: rgba(0,0,0,0.45) !important; }
+.chat-form input::placeholder {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
 
 /* Improve scroll behavior: always show newest at bottom */
-.chat-window { scroll-behavior: smooth; }
+.chat-window {
+  scroll-behavior: smooth;
+}
 
+/* Final touch: subtle appear animation for new messages */
+.chat-window .chat-message,
+.chat-window .msg {
+  transition: transform 180ms cubic-bezier(.2,.9,.2,1), opacity 180ms ease;
+  transform: translateY(6px);
+  opacity: 0.96;
+}
+.chat-window .chat-message.new,
+.chat-window .msg.new {
+  transform: translateY(0);
+  opacity: 1;
+}
 
 /* visually hidden */
 .visually-hidden {
